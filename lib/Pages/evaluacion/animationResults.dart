@@ -51,7 +51,7 @@ class _AnimationResultsPageState extends State<AnimationResultsPage>
 
   // method to be called when the widget mounts
   void _initLoadingAnimationController() {
-    _loadingAnimationController = AnimationController(
+   /*  _loadingAnimationController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 6),
     )..addStatusListener((AnimationStatus status) {
@@ -60,7 +60,7 @@ class _AnimationResultsPageState extends State<AnimationResultsPage>
            Navigator.of(context)
                .pushNamedAndRemoveUntil('home', (Route<dynamic> route) => false);
         }
-      });
+      }); */
   }
 
   @override

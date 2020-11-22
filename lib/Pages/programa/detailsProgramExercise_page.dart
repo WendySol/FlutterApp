@@ -47,11 +47,78 @@ class _DetailsProgramPageState extends State<DetailsProgramPage> {
   Widget build(BuildContext context) {
     final Routine routinesProgram = ModalRoute.of(context).settings.arguments;
 
+    final _pageController = PageController(viewportFraction: 0.9, initialPage: 0);
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text("${routinesProgram.name}"),
       ),
-      body: Container(
+      body: PageView.builder(
+        controller: _pageController,
+          itemCount: routinesProgram.exercises.length,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+              margin: EdgeInsets.symmetric(vertical: 15),
+                    color: Colors.green,
+                    height: 600,
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: FadeInImage(
+                            
+                            image:
+                                NetworkImage(routinesProgram.exercises[index].urlGif),
+                            height: screenSize.height * 0.5,
+                            width: screenSize.width * 0.6,
+                            fit: BoxFit.fill,
+                            placeholder: AssetImage("assets/no-image.jpg"),
+                          ),
+                        ), Row(
+                    
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Nombre :  '),
+                      Text('${routinesProgram.exercises[index].name}'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('restSerie :  '),
+                      Text('${routinesProgram.exercises[index].restSerie}'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('series :  '),
+                      Text('${routinesProgram.exercises[index].series}'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('restExercise :  '),
+                      Text('${routinesProgram.exercises[index].restExercise}'),
+                    ],
+                  ),
+                      ],
+                    ),
+                  ),
+                 
+                ],
+              ),
+            );
+          }),
+
+      /*  Container(
         child: Column(children: [
           cardSwiper(routinesProgram),
           footer(routinesProgram),
@@ -60,7 +127,7 @@ class _DetailsProgramPageState extends State<DetailsProgramPage> {
           // Text("Holaaaa"),
           // Text("Holaaaa"),
         ]),
-      ),
+      ), */
     );
 
     // indicatorLayout: PageIndicatorLayout.COLOR,

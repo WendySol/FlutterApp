@@ -33,10 +33,10 @@ class _RadialProgressState extends State<RadialProgress> with SingleTickerProvid
 
     porcentajeAnterior = widget.porcentaje;
 
-    controller = new AnimationController(
+    /* controller = new AnimationController(
       vsync: this,
        duration: Duration(milliseconds: 200)
-    );
+    ); */
 
 
     super.initState();
@@ -108,10 +108,10 @@ class _MiRadialProgress extends CustomPainter{
       );
 
     final Gradient gradiente = new LinearGradient(
-      colors: <Color>[
+     /*  colors: <Color>[
         Colors.blueAccent,
         Colors.greenAccent,
-      ]
+      ] */
       );
 
 
