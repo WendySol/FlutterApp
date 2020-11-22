@@ -34,11 +34,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Image(
-                      image: AssetImage("assets/perfil.jpg"),
-                      fit: BoxFit.fitHeight,
-                      height: 120,
-                      width: 120,
+                    ClipOval(
+                                          child: Image(
+                        image: AssetImage("assets/sinperfil.png"),
+                        fit: BoxFit.fitHeight,
+                        height: 120,
+                        width: 120,
+                      ),
                     ),
                     SizedBox(
                       height: 20,
@@ -67,13 +69,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text("Contraseña",style: TextStyle(color: Colors.white)),
-                        Text(profileRecup.password,style: TextStyle(color: Colors.white)),
-                      ]
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //   children: [
+                    //     Text("Contraseña",style: TextStyle(color: Colors.white)),
+                    //     Text(profileRecup.password,style: TextStyle(color: Colors.white)),
+                    //   ]
+                    // ),
                     SizedBox(
                       height: 20,
                     ),

@@ -144,6 +144,8 @@ class _ShowExercisesPageState extends State<ShowExercisesPage> {
                                                     fontWeight: FontWeight.w400),
                                               ),
                                               SizedBox(height: 10),
+
+                                              
                                             ],
                                           ),
                                           Expanded(

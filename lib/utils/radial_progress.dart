@@ -33,10 +33,10 @@ class _RadialProgressState extends State<RadialProgress> with SingleTickerProvid
 
     porcentajeAnterior = widget.porcentaje;
 
-    // controller = new AnimationController(
-    //   vsync: this,
-    //    duration: Duration(milliseconds: 200)
-    // );
+    controller = new AnimationController(
+      vsync: this,
+       duration: Duration(milliseconds: 200)
+    );
 
 
     super.initState();
@@ -104,14 +104,14 @@ class _MiRadialProgress extends CustomPainter{
 
       final Rect rect = new Rect.fromCircle(
          center: Offset(0,0),
-         radius: 100 
+         radius: 50 
       );
 
     final Gradient gradiente = new LinearGradient(
-      // colors: <Color>[
-      //   Colors.blueAccent,
-      //   Colors.greenAccent,
-      // ]
+      colors: <Color>[
+        Colors.blueAccent,
+        Colors.greenAccent,
+      ]
       );
 
 
@@ -122,7 +122,7 @@ class _MiRadialProgress extends CustomPainter{
 
     Offset center= new Offset(size.width *0.5, size.height /2 );
 
-    double radio= min(size.width * 0.5, size.height * 0.5);
+    double radio= min(size.width * 0.45, size.height * 0.45);
 
     canvas.drawCircle(center, radio, paint);
 

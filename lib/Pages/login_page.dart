@@ -7,6 +7,8 @@ import 'package:proyecto_codigo/provider/user_provider.dart';
 import 'package:proyecto_codigo/utils/httphelper.dart';
 
 import 'package:proyecto_codigo/utils/preferences_user.dart';
+import 'package:wave/config.dart';
+import 'package:wave/wave.dart';
 
 class LoginUserPage extends StatefulWidget {
   @override
@@ -98,37 +100,56 @@ class _LoginUserPageState extends State<LoginUserPage> {
                 ))
             : Stack(
                 children: [
-                  Image.asset(
-                    'assets/fondq.jpeg',
-                    fit: BoxFit.cover,
+                  Container(
+                    // color: HexColor("#508D99"),
+                    color: Colors.cyan[900],
                     height: double.infinity,
                     width: double.infinity,
                     alignment: Alignment.center,
                   ),
+                  // Container(
+                  //   child: WaveWidget(
+                  //     config: CustomConfig(
+                  //       gradients: [
+                  //         [Colors.cyan[900], Colors.cyan[900]],
+                  //         [Colors.cyan[900], Colors.cyan[900]],
+                  //         [Colors.cyan[900], Colors.cyan[900]],
+                  //         [HexColor("#508D99"), HexColor("#508D99")]
+                  //       ],
+                  //       durations: [35000, 19440, 10800, 6000],
+                  //       heightPercentages: [0.18, 0.45, 0.40, 0.30],
+                  //       blur: MaskFilter.blur(BlurStyle.solid, 5),
+                  //       gradientBegin: Alignment.bottomLeft,
+                  //       gradientEnd: Alignment.topRight,
+                  //     ),
+                  //     waveAmplitude: 10,
+                  //     size: Size(
+                  //       double.infinity,
+                  //       double.infinity,
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
-                    margin: EdgeInsets.only(left: 128,top: 50),
-                    width: 150,
-                    height: 150,
+                    margin: EdgeInsets.only(left: 150, top: 60),
+                    width: 100,
+                    height: 100,
                     child: Image.asset(
-                      'assets/qenq.png',
+                      'assets/orig.png',
                     ),
                   ),
-                  
                   Padding(
                     padding: const EdgeInsets.only(top: 190),
-                    child: Card(
-                      color: Colors.cyan[900].withOpacity(0.85),
-                      elevation: 6.0,
-                      margin: EdgeInsets.all(25),
-                      child: Container(
-                        height: 450,
+                    child: Container(
+                      height: 450,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: ListView(
                           children: <Widget>[
                             headerSection(),
                             textSection(),
                             buttonSection(),
                             SizedBox(
-                              height: 20,
+                              height: 10,
                             ),
                             Container(
                               child: Row(
@@ -138,6 +159,9 @@ class _LoginUserPageState extends State<LoginUserPage> {
                                       style: TextStyle(
                                         color: Colors.white,
                                       )),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
                                   GestureDetector(
                                     child: Text(
                                       " Registrate ",
@@ -167,15 +191,17 @@ class _LoginUserPageState extends State<LoginUserPage> {
   Container buttonSection() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 40.0,
+      height: 48.0,
       padding: EdgeInsets.symmetric(horizontal: 30.0),
       margin: EdgeInsets.only(top: 15.0),
       child: RaisedButton(
         onPressed: () async {
           iniciarSesion();
         },
-        color: Theme.of(context).accentColor,
-        child: Text("Ingresa", style: TextStyle(color: Colors.white)),
+        color: HexColor("#F29E38"),
+        child: Text("Ingresa",
+            style: TextStyle(
+                color: Colors.white, fontSize: 19)), //cambiar nombre poderoso
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       ),
@@ -194,7 +220,8 @@ class _LoginUserPageState extends State<LoginUserPage> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: HexColor("#7DB2BC"),
+              color: HexColor("#336E7A"),
+             // color:Colors.cyan[800],
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextFormField(
@@ -221,7 +248,7 @@ class _LoginUserPageState extends State<LoginUserPage> {
           SizedBox(height: 30.0),
           Container(
             decoration: BoxDecoration(
-              color: HexColor("#7DB2BC"),
+              color: HexColor("#336E7A"),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextFormField(
@@ -248,9 +275,13 @@ class _LoginUserPageState extends State<LoginUserPage> {
           SizedBox(
             height: 15,
           ),
-          Text(
-            "¿Olvidaste tu contraseña?",
-            style: TextStyle(color: Colors.white),
+          Padding(
+            padding: const EdgeInsets.only(left: 145),
+            child: Text(
+              "¿Olvidaste tu contraseña?",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -260,11 +291,11 @@ class _LoginUserPageState extends State<LoginUserPage> {
   Container headerSection() {
     return Container(
       child: Center(
-        child: Text("Ingresa",
+        child: Text("¡Sal de la rutina!",
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 40.0,
-                fontWeight: FontWeight.normal)),
+                fontSize: 25.0,
+                 fontWeight: FontWeight.w500)),
       ),
     );
   }

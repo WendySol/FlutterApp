@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_codigo/Pages/evaluacion/shoResultEvaluation.dart';
+
 import 'package:proyecto_codigo/Pages/usuario/edit_profile_page.dart';
 import 'package:proyecto_codigo/models/resProfileRecovery_model.dart';
 import 'package:proyecto_codigo/models/resResEvaProgram_model.dart';
+
+import 'package:proyecto_codigo/utils/customRdial.dart';
 import 'package:proyecto_codigo/utils/httphelper.dart';
 import 'package:proyecto_codigo/utils/preferences_user.dart';
 
@@ -52,19 +54,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(idPro);
+    //print(idPro);
     return new FutureBuilder<Profile>(
         future: HttpHelper().consultarUsuario(idPro, token),
         builder: (BuildContext context, AsyncSnapshot<Profile> snapshot) {
           if (snapshot.hasData) {
-          Profile profileRecup = snapshot.data;
-           // Evaluation evaRecup = snapshot.data;
+            Profile profileRecup = snapshot.data;
+            // Evaluation evaRecup = snapshot.data;
             return Scaffold(
               body: Stack(
                 children: [
-                 // Container(color: Colors.blueGrey[400]),
-                  infoProfile(context, profileRecup),
+                   Container(
+                    height: 225,
+                    width: 500,
+                    alignment: Alignment.center,
+                    color: Colors.cyan[900],
+                  ),
                   publisProfile(context),
+                  infoProfile(context, profileRecup),
                 ],
               ),
             );
@@ -72,131 +79,128 @@ class _ProfilePageState extends State<ProfilePage> {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Center(child: CircularProgressIndicator()),
+            );
           }
         });
   }
 
   Widget infoProfile(BuildContext context, Profile profileRecup) {
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(50),
-        bottomRight: Radius.circular(50),
-      ),
       child: Container(
-        height: 280,
-        width: 500,
-        color: Colors.cyan[900],
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
+        child: SafeArea(
+          child: Container(
             child: Column(
               children: [
-                SizedBox(height: 10),
+                
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(
-                      Icons.arrow_back,
-                      color: Colors.cyan[900],
-                    ),
                     GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    EditProfilePage(profileRecup)),
-                          );
-                        },
-                        child: Icon(Icons.edit, color: Colors.white))
+                      child: Icon(Icons.edit, color: Colors.white),
+                      onTap: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  EditProfilePage(profileRecup)),
+                        );
+                      },
+                    ),
+                    SizedBox(width: 25),
                   ],
                 ),
-                SizedBox(height: 25),
+                SizedBox(height: 15),
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(right: 40, left: 40),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                             children: [
-                              Image(
-                                image: AssetImage("assets/perfil.jpg"),
-                                fit: BoxFit.fitHeight,
-                                height: 90,
-                                width: 90,
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
                               Text(
                                 "${profileRecup.name}",
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              )
+                                    color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ClipOval(
+                                child: Image(
+                                  image: AssetImage("assets/sinperfil.png"),
+                                  fit: BoxFit.fitHeight,
+                                  height: 128,
+                                  width: 128,
+                                ),
+                              ),
+                              
                             ],
                           ),
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        "${profileRecup.followers}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 22),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Seguidores",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 20),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        "${profileRecup.followers}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 22),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Siguiendo",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 30),
-                              Container(
-                                  height: 40.0,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 15.0),
-                                  margin: EdgeInsets.only(top: 15.0),
-                                  child: RaisedButton(
-                                    onPressed: () {},
-                                    color: Colors.orange,
-                                    child: Text("Seguir",
-                                        style: TextStyle(color: Colors.white)),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                  ))
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      "${profileRecup.followers}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Seguidores",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 25),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "${profileRecup.followers}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 22),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Siguiendo",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 30),
+
+                                // Container(
+                                //   width: 120,
+                                //     height: 49,
+                                //     padding:
+                                //         EdgeInsets.symmetric(horizontal: 15.0),
+                                //     margin: EdgeInsets.only(top: 15.0),
+                                //     child: RaisedButton(
+                                //       onPressed: () {},
+                                //       color: Colors.orange,
+                                //       child: Text("Seguir",
+                                //           style: TextStyle(color: Colors.white,fontSize: 15)),
+                                //       shape: RoundedRectangleBorder(
+                                //           borderRadius:
+                                //               BorderRadius.circular(10.0)),
+                                //     ))
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -212,208 +216,317 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget publisProfile(BuildContext context) {
-    return Container(
-      
-      child: FutureBuilder<Profile>(
-          future: HttpHelper().consultarUsuario(idPro, token), //aqui se consultara al usuario y traera su info, esperar Renato//TODO
-          builder: (BuildContext context, AsyncSnapshot<Profile> snapshot) {
-            if (snapshot.hasData) {
-              Profile profileRecup = snapshot.data;
-              
-              return Padding(
-                padding: const EdgeInsets.only(left:30,top:300),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(right: 180),
-                      child: Text("Resumen de Evaluación",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.black)),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 3,
-                              blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
-                            ),
-                          ]),
-                      width: 320,
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 200),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+            FutureBuilder<Evaluation>(
+                future: HttpHelper().consultaEvaluation(idPro, token),
+                builder:
+                    (BuildContext context, AsyncSnapshot<Evaluation> snapshot) {
+                  if (snapshot.hasData) {
+                    Evaluation evaRecup = snapshot.data;
+                    print(evaRecup);
+                    return Container(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Center(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "IMC",
+                            Container(
+                              
+                              child: Text("Resumen de Evaluación",
                                   style: TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  "23",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontSize: 19)),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Descripción",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  "Normal",
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
+                            SizedBox(
+                              height: 10,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(right: 200),
-                      child: Text("Mis Requerimientos",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.black)),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 3,
-                              blurRadius: 5,
-                              offset: Offset(0, 3), // changes position of shadow
-                            ),
-                          ]),
-                      width: 320,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Calorias Diarias",
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              "200",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(right: 200),
-                      child: Text("Mis Macronutrientes",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.black)),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 320,
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white,
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 3,
-                                    blurRadius: 5,
-                                    offset: Offset(
-                                        0, 3), // changes position of shadow
-                                  ),
-                                ]),
-                            child: Column(
-                              children: [
-                                Row(
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 0.5,
+                                      blurRadius: 5,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ]),
+                              width: 320,
+                              height: 150,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    /* CustomRadialProgress(porcentaje: porcentajeProte, color: Colors.greenAccent,tipomacro: 'Proteinas',),//proteinas
-                            CustomRadialProgress(porcentaje: porcentajeCarbo, color: Colors.greenAccent[200],tipomacro: 'Carbohidratos',),
-                            CustomRadialProgress(porcentaje: porcentajeGrasa, color: Colors.greenAccent[100],tipomacro: 'Grasa',),  //carbohidratos */
-                                    Column(
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        CustomRadialProgress(
-                                            porcentaje: 100.0,
-                                            cantidad: 20,
-                                            color: Colors.white),
-                                        Text("Proteinas"),
+                                        Text(
+                                          "IMC",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          "${evaRecup.imcResult}",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        CustomRadialProgress(
-                                            porcentaje: 100.0,
-                                            cantidad: 20,
-                                            color: Colors.white),
-                                        Text("Carbohidratos"),
+                                        Text(
+                                          "Objetivo",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          "${evaRecup.physicalObjective}",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ],
                                     ),
-                                    Column(
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        CustomRadialProgress(
-                                            porcentaje: 100.0,
-                                            cantidad: 20,
-                                            color: Colors.white),
-                                        Text("Grasas"),
+                                        Text(
+                                          "Grasa Corporal",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          "${evaRecup.corporalGrease.toString().substring(1, 3)} %",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Masa Magra",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        Text(
+                                          "${evaRecup.corporalLeanMass.toString().substring(1, 3)} %",
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
-                              ],
+                              ),
                             ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              child: Text("Mis Requerimientos",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontSize: 19)),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 0.5,
+                                      blurRadius: 5,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ]),
+                              width: 320,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Calorias Diarias",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                      "${evaRecup.caloriesRecommended.round()}",
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Container(
+                              child: Text("Mis Macronutrientes",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontSize: 19)),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              width: 320,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: <BoxShadow>[
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            spreadRadius: 0.5,
+                                            blurRadius: 5,
+                                            offset: Offset(0,
+                                                3), // changes position of shadow
+                                          ),
+                                        ]),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Column(
+                                              children: [
+                                                CustomRadialProgress(
+                                                    porcentaje: 100.0,
+                                                    cantidad: 20,
+                                                    color: Colors.white),
+                                                Text("Proteinas"),
+                                                Text("(Gramos)"),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                CustomRadialProgress(
+                                                    porcentaje: 100.0,
+                                                    cantidad: evaRecup
+                                                        .carbohydratesGrams
+                                                        .round()
+                                                        .toDouble(),
+                                                    color: Colors.white),
+                                                Text("Carbohidratos"),
+                                                Text("(Gramos)"),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                CustomRadialProgress(
+                                                    porcentaje: 100.0,
+                                                    cantidad: evaRecup.greaseGrams
+                                                        .round()
+                                                        .toDouble(),
+                                                    color: Colors.white),
+                                                Text("Grasas"),
+                                                Text("(Gramos)"),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Padding(
+                  padding: const EdgeInsets.only(top:120),
+                  child: Card(
+                    child: Container(
+                      height: 180,
+                      //width: double.infinity,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Ups! Parece que aún no completas tu evaluación",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            width: 200,
+                            child: Text(
+                              "Para visualizar tus resultados debes completar tu evaluación",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          SizedBox(height: 25),
+                          Container(
+                            width: 250,
+                            height: 49,
+                            child: Icon(Icons.adb)
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              );
-            }
-            if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          }),
+                  ),
+                );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 470),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                }),
+          ]),
+        ),
+      ),
     );
   }
 }

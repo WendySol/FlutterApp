@@ -18,8 +18,8 @@ class ResResEvaProgramModelDart {
     ProgramSelected programSelected;
 
     factory ResResEvaProgramModelDart.fromJson(Map<String, dynamic> json) => ResResEvaProgramModelDart(
-        evaluation: Evaluation.fromJson(json["evaluation"]),
-        programSelected: ProgramSelected.fromJson(json["program_selected"]),
+        evaluation: Evaluation.fromJson(json["evaluation"] ),
+        programSelected: ProgramSelected.fromJson(json["program_selected"] ),
     );
 
     Map<String, dynamic> toJson() => {
@@ -42,6 +42,7 @@ class Evaluation {
         this.caloriesGrease,
         this.greaseGrams,
         this.physicalActivity,
+        this.physicalObjective,
         this.coefficientPhysicalActivity,
         this.coefficientPhysicalActivityResult,
     });
@@ -58,7 +59,8 @@ class Evaluation {
     double caloriesGrease;
     double greaseGrams;
     String physicalActivity;
-    int coefficientPhysicalActivity;
+    String physicalObjective;
+    double coefficientPhysicalActivity;
     String coefficientPhysicalActivityResult;
 
     factory Evaluation.fromJson(Map<String, dynamic> json) => Evaluation(
@@ -74,7 +76,8 @@ class Evaluation {
         caloriesGrease: json["calories_grease"].toDouble(),
         greaseGrams: json["grease_grams"].toDouble(),
         physicalActivity: json["physical_activity"],
-        coefficientPhysicalActivity: json["coefficient_physical_activity"],
+        physicalObjective: json["physical_objective"],
+        coefficientPhysicalActivity: json["coefficient_physical_activity"].toDouble(),
         coefficientPhysicalActivityResult: json["coefficient_physical_activity_result"],
     );
 
@@ -91,6 +94,7 @@ class Evaluation {
         "calories_grease": caloriesGrease,
         "grease_grams": greaseGrams,
         "physical_activity": physicalActivity,
+        "physical_objective": physicalObjective,
         "coefficient_physical_activity": coefficientPhysicalActivity,
         "coefficient_physical_activity_result": coefficientPhysicalActivityResult,
     };

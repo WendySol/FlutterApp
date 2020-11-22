@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto_codigo/models/resProfileRecovery_model.dart';
+import 'package:proyecto_codigo/provider/user_provider.dart';
 import 'package:proyecto_codigo/utils/preferences_user.dart';
 import 'package:proyecto_codigo/utils/validator.dart';
 import 'package:wave/config.dart';
@@ -45,82 +47,84 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
       body: Stack(
         children: [
           Container(
-            color: HexColor("#508D99"),
+            // color: HexColor("#508D99"),
+            color: Colors.cyan[900],
             height: double.infinity,
             width: double.infinity,
             alignment: Alignment.center,
           ),
-          Container(            
-            child: WaveWidget(
-              config: CustomConfig(
-                gradients: [
-                  [Colors.cyan[900],Colors.cyan[900]],
-                  [Colors.cyan[900],Colors.cyan[900]],
-                  [Colors.cyan[900], Colors.cyan[900]],
-                  [HexColor("#508D99"),HexColor("#508D99")]
-                ],
-                durations: [35000, 19440, 10800, 6000],
-                heightPercentages: [0.18, 0.45, 0.40, 0.30],
-                blur: MaskFilter.blur(BlurStyle.solid, 5),
-                gradientBegin: Alignment.bottomLeft,
-                gradientEnd: Alignment.topRight,
-              ),              
-              waveAmplitude: 10,   
-                  
-              size: Size(
-                double.infinity,
-                double.infinity,
-              ),
-            ),
-          ),
+          // Container(
+          //   child: WaveWidget(
+          //     config: CustomConfig(
+          //       gradients: [
+          //         [Colors.cyan[900],Colors.cyan[900]],
+          //         [Colors.cyan[900],Colors.cyan[900]],
+          //         [Colors.cyan[900], Colors.cyan[900]],
+          //         [HexColor("#508D99"),HexColor("#508D99")]
+          //       ],
+          //       durations: [35000, 19440, 10800, 6000],
+          //       heightPercentages: [0.18, 0.45, 0.40, 0.30],
+          //       blur: MaskFilter.blur(BlurStyle.solid, 5),
+          //       gradientBegin: Alignment.bottomLeft,
+          //       gradientEnd: Alignment.topRight,
+          //     ),
+          //     waveAmplitude: 10,
+
+          //     size: Size(
+          //       double.infinity,
+          //       double.infinity,
+          //     ),
+          //   ),
+          // ),
           Container(
-            margin: EdgeInsets.only(left: 128, top: 20),
-            width: 150,
-            height: 150,
+            margin: EdgeInsets.only(left: 150, top: 70),
+            width: 100,
+            height: 100,
             child: Image.asset(
-              'assets/qenq.png',
+              'assets/orig.png',
             ),
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 150),
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 150),
               child: Container(
-                margin: EdgeInsets.only(top: 30),
+                margin: EdgeInsets.only(top: 10),
                 //padding: const EdgeInsets.only(top:30.0),
                 child: Form(
                   key: keyForm,
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 50.0),
+                        margin: EdgeInsets.only(top: 40.0),
                         // padding: EdgeInsets.symmetric(
                         //     horizontal: 70.0, vertical: 30.0),
-                        child: Text("Regístrate",
+                        child: Text("¡ Regístrate con todo el poder !",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40.0,
-                            )),
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.w500)),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 60,
                       ),
                       _nombreUsuario(
                         context,
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       _emailUsuario(context),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
                       _passwordUsuario(context),
-                      SizedBox(height: 10),
+                      SizedBox(height: 20),
 
                       //Repetir contraseña
                       _passwordRepeat(context),
-                      SizedBox(height: 20),
+                      SizedBox(height: 40),
 
                       //-----------Boton------------
                       SizedBox(
                         width: 350,
+                        height: 48,
                         child: RaisedButton(
                           onPressed: () async {
                             setState(() {
@@ -131,8 +135,10 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0)),
                           padding: EdgeInsets.all(0.0),
-                          child: Text('Registrar'),
-                          color: Theme.of(context).accentColor,
+                          child: Text('Registrar',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 19)),
+                          color: HexColor("#F29E38"),
                           textColor: Colors.white,
 
                           //color: Theme.of(context),
@@ -140,7 +146,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 40,
                       ),
                       Container(
                         child: Row(
@@ -198,18 +204,30 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
         String token = await HttpHelper()
             .iniciarSesion(_controllerEmail.text, _controllerPassword.text);
 
+        
+        
         Profile pro = await HttpHelper().consultarPerfil(
             _controllerEmail.text, _controllerPassword.text, token);
         //print("profile $pro");
 
-        await Preferencias().saveIdUser(pro.id);
+        // await Preferencias().saveIdUser(pro.id);
         // _scaffoldKey.currentState
         //     .showSnackBar(SnackBar(content: Text('Registro exitoso')));
+        if (pro != null) {
+          print("profile $pro");
+          await  Preferencias().saveUserToken(token);
+          await Preferencias().saveIdUser(pro.id);
 
+          Navigator.pushReplacementNamed(context, 'home');
+        } else {
+          print("Error de carga");
+          showInSnackBar("Error de carga, vuelva intentar");
+        }
         print('Processing Data');
         showInSnackBar("Usuario Registrado");
-        Navigator.pushReplacementNamed(context, 'home');
-      } else {
+        
+      } 
+      else {
         print("Usuario no registrado");
         showInSnackBar("Credenciales incorrectas, vuelva a intentarlo");
       }
@@ -222,14 +240,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget _passwordUsuario(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: HexColor("#7DB2BC"),
+        color: HexColor("#336E7A"),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextFormField(
           controller: _controllerPassword,
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           obscureText: true,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             fillColor: Theme.of(context).primaryColor,
             icon: Padding(
@@ -257,14 +275,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget _passwordRepeat(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: HexColor("#7DB2BC"),
+        color: HexColor("#336E7A"),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextFormField(
           controller: _controllerPasswordRepeat,
-          cursorColor: Colors.black,
+          cursorColor: Colors.white,
           obscureText: true,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             fillColor: Theme.of(context).primaryColor,
             icon: Padding(
@@ -294,14 +312,14 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget _emailUsuario(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: HexColor("#7DB2BC"),
+        color: HexColor("#336E7A"),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextFormField(
           controller: _controllerEmail,
           keyboardType: TextInputType.emailAddress,
           cursorColor: Colors.white,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             fillColor: Theme.of(context).primaryColor,
             icon: Padding(
@@ -337,7 +355,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
   Widget _nombreUsuario(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: HexColor("#7DB2BC"),
+        color: HexColor("#336E7A"),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextFormField(
@@ -348,7 +366,7 @@ class _RegistroUsuarioState extends State<RegistroUsuario> {
           fillColor: Theme.of(context).primaryColor,
           icon: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Icon(Icons.people, color: Colors.white),
+            child: Icon(Icons.person, color: Colors.white),
           ),
           hintText: "Nombre",
           focusedBorder: InputBorder.none,

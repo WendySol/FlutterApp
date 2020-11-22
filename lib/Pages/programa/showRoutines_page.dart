@@ -100,151 +100,62 @@ class _ShowRoutinesPageState extends State<ShowRoutinesPage> {
       // ),
 
       body: Container(
-        child: Column(
+        child: Stack(
           children: [
-            SizedBox(
-              height: 25,
-            ),
-            Center(
-              child: Text("Mi Programa",
-                  style: TextStyle(fontSize: 30, color: Colors.black)),
-            ),
-            SizedBox(
-              height: 25,
-            ),
             Container(
-              child: _listHorizontal(),
+              height: 250,
+              width: 500,
+              alignment: Alignment.center,
+              color: Colors.cyan[900],
             ),
-            Expanded(
-              child: Stack(children: [
-                Container(
-                    //         color: Colors.blueGrey[400],
-                    ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: FutureBuilder(
-                      future: HttpHelper().consultaPrograma(idPro, token),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<Routine> listRouti = snapshot.data;
-                          // return ListView.builder(
-                          //     itemCount: listRouti.length,
-                          //     itemBuilder: (context, index) {
-
-                          return GridView.builder(
-                            itemCount: listRouti.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ShowExercisesPage(listRouti[index]),
-                                      ));
-                                },
-                                child: Card(
-                                  //color: Colors.grey[350],
-                                  // child: Container(
-                                  //   decoration: BoxDecoration(
-                                  //     image: DecorationImage(
-                                  //       image: AssetImage(listImage[
-                                  //           index % listImage.length]),
-                                  //       fit: BoxFit.cover,
-                                  //     ),
-                                  //   ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "${listRouti[index].name}",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: Colors.black,
-
-                                                //color: Theme.of(context).accentColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-
-                                          SizedBox(height: 10),
-                                          // Text(
-                                          //   listRouti[index].id,
-                                          //   style: TextStyle(
-                                          //       color: Colors.black,
-                                          //       fontSize: 15,
-                                          //       fontWeight: FontWeight.w400),
-                                          // ),
-                                          SizedBox(height: 10),
-                                        ],
-                                      ),
-                                    ),
-                                  //),
-                                ),
-                              );
-                            },
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "MI PROGRAMA",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w800),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "¿Quieres ejercicios personalizados?",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                SizedBox(height: 25),
-                                SizedBox(
-                                  height: 30,
-                                  width: 160,
-                                  child: RaisedButton(
-                                    elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0)),
-                                    padding: EdgeInsets.all(0.0),
-                                    child: Text('¡Vamos!',
-                                        style: TextStyle(
-                                            fontSize: 20, color: Colors.white)),
-                                    color: Theme.of(context).accentColor,
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, "completeEva");
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      }),
+            Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0)),
+                  color: Colors.white,
                 ),
-              ]),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Container(
+                        width: 310,
+                        child: Text(
+                          "Hoy te toca realizar esta rutina física",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 18),
+                        )),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    // Container(
+                    //   child: _listDias(),
+                    // ),
+                    _buildRutinas(idPro: idPro, token: token),
+                  ],
+                ),
+              ),
+            ),
+            
+            Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+                Center(
+                  child: Text(
+                    "Mi Programa",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                        color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -252,7 +163,7 @@ class _ShowRoutinesPageState extends State<ShowRoutinesPage> {
     );
   }
 
-  Widget _listHorizontal() {
+  Widget _listDias() {
     return Container(
       height: 140,
       child: Padding(
@@ -378,5 +289,202 @@ class _ShowRoutinesPageState extends State<ShowRoutinesPage> {
             ),
           ),
         ));
+  }
+}
+
+class _buildRutinas extends StatelessWidget {
+  const _buildRutinas({
+    Key key,
+    @required this.idPro,
+    @required this.token,
+  }) : super(key: key);
+
+  final String idPro;
+  final String token;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: FutureBuilder(
+            future: HttpHelper().consultaRutinasdePrograma(idPro, token),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<Routine> listRouti = snapshot.data;
+
+                return Container(
+                    width: double.infinity,
+                    child: Container(
+                      height: 80,
+                      width: double.infinity,
+                      margin: EdgeInsets.only(right: 20, left: 20, bottom: 30),
+                      child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: listRouti.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                width: 200,
+                                height: 150,
+                                child: GestureDetector(
+                                  onTap: () {
+                                     Navigator.pushNamed(context, 'detailsProgramaEjercicios',
+                                       arguments: listRouti[index]);
+                                  },
+                                  child: Card(
+                                    child: Column(
+                                      // crossAxisAlignment:
+                                      //     CrossAxisAlignment.start,
+                                      children: [
+                                        // Container(
+                                        //   width: 200,
+                                        //   height: 180,
+                                        //   child: FadeInImage.assetNetwork(
+                                        //       placeholder: '/assets/full.jpeg',
+                                        //       image: listRouti[index].name),
+                                        // ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            child: Text(
+                                              listRouti[index].name,
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ); //Card(child: Text("data"),);
+                            },
+                          )),
+                    ));
+                // return GridView.builder(
+                //   itemCount: listRouti.length,
+                //   gridDelegate:
+                //       SliverGridDelegateWithFixedCrossAxisCount(
+                //     crossAxisCount: 1,
+                //   ),
+                //   itemBuilder: (context, index) {
+                //     return GestureDetector(
+                //       onTap: () {
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //               builder: (context) =>
+                //                   ShowExercisesPage(listRouti[index]),
+                //             ));
+                //       },
+                //       child: Card(
+                //         //color: Colors.grey[350],
+                //         // child: Container(
+                //         //   decoration: BoxDecoration(
+                //         //     image: DecorationImage(
+                //         //       image: AssetImage(listImage[
+                //         //           index % listImage.length]),
+                //         //       fit: BoxFit.cover,
+                //         //     ),
+                //         //   ),
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(8.0),
+                //           child: Column(
+                //             mainAxisAlignment:
+                //                 MainAxisAlignment.start,
+                //             crossAxisAlignment:
+                //                 CrossAxisAlignment.start,
+                //             children: [
+                //               Text(
+                //                 "${listRouti[index].name}",
+                //                 textAlign: TextAlign.center,
+                //                 style: TextStyle(
+                //                     color: Colors.black,
+
+                //                     //color: Theme.of(context).accentColor,
+                //                     fontSize: 15,
+                //                     fontWeight: FontWeight.w800),
+                //               ),
+                //               // Image(
+                //               // //  image:   AssetImage(),
+                //               // ),
+                //               SizedBox(height: 10),
+
+                //               // Text(
+                //               //   listRouti[index].id,
+                //               //   style: TextStyle(
+                //               //       color: Colors.black,
+                //               //       fontSize: 15,
+                //               //       fontWeight: FontWeight.w400),
+                //               // ),
+                //               SizedBox(height: 10),
+                //             ],
+                //           ),
+                //         ),
+                //         //),
+                //       ),
+                //     );
+                //   },
+                // );
+              }
+              if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Card(
+                    child: Container(
+                      height: 180,
+                      //width: double.infinity,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Parece que aún no completas tu evaluación",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Completa tu evaluación para que tengas un programa poderoso",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(height: 25),
+                          Container(
+                            width: 250,
+                            height: 49,
+                            child: SizedBox(
+                              child: RaisedButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0)),
+                                padding: EdgeInsets.all(0.0),
+                                child: Text('¡Vamos!',
+                                    style: TextStyle(fontSize: 19)),
+                                color: Colors.orangeAccent,
+                                textColor: Colors.black,
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "completeGoal");
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            }),
+      ),
+    );
   }
 }

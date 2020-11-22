@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:proyecto_codigo/models/ejerciciosAll.dart' as general;
+import 'package:proyecto_codigo/models/resEjercicioDetalleModel.dart';
+import 'package:proyecto_codigo/models/resEjercicixTipo.dart';
 import 'package:proyecto_codigo/models/resProfileRecovery_model.dart' as log;
 import 'package:proyecto_codigo/models/resResEvaProgram_model.dart' as evapro;
+import 'package:proyecto_codigo/models/resResEvaProgram_model.dart';
 
 import 'package:proyecto_codigo/utils/preferences_user.dart';
 
@@ -67,7 +70,7 @@ class HttpHelper {
   }
 
   //CUANDO COMPLETA LA EVALUACION RECIBE PROGRAMA
-  Future<List<evapro.Routine>> consultaPrograma(
+  Future<List<evapro.Routine>> consultaRutinasdePrograma(
       String idPro, String token) async {
     //Lista rutinas fisicas
     var jsonResponse;
@@ -80,15 +83,79 @@ class HttpHelper {
       },
     );
 
+    if (response != null && response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+
+      List rutinas = jsonDecode(response.body)["program_selected"]["routines"];
+
+      return rutinas.map((e) => evapro.Routine.fromJson(e)).toList();
+    } else {
+      //do something else
+    }
+
+    // if (response.statusCode == 200) {
+    //   //print(json.decode(response.body));
+    //   //   if (json.decode(response.body)["message"] != "fail") {
+    //   jsonResponse = json.decode(response.body);
+
+    //   List rutinas = jsonDecode(response.body)["program_selected"]["routines"];
+
+    //   return rutinas.map((e) => evapro.Routine.fromJson(e)).toList();
+
+    //   //  Routine infoRutin = Routine.fromJson(jsonDecode(response.body)["program_selected"]["routines"]);
+
+    // }
+  }
+
+  Future<ResEjercicioDetalleModel> detalleEjercicio(
+      String token, String idExercise) async {
+    var jsonResponse;
+    var response = await http.get(
+      "$urlBase/exercisebyid/$idExercise",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "$token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(json.decode(response.body));
+      //   if (json.decode(response.body)["message"] != "fail") {
+      jsonResponse = json.decode(response.body);
+      ResEjercicioDetalleModel detalleEjercicio =
+          ResEjercicioDetalleModel.fromJson(jsonDecode(response.body));
+
+      print(detalleEjercicio);
+      return detalleEjercicio;
+    }
+  }
+
+  Future<List<ResEjercicioxTipoModel>> consultarRutinasxTipo(
+      String token,String tipo) async {
+    // lista ejercicios de rutina //TODO
+    var jsonResponse;
+    var response = await http.get(
+      "$urlBase/exercisesByType/$tipo",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "$token"
+      },
+    );
+
     if (response.statusCode == 200) {
       //print(json.decode(response.body));
       //   if (json.decode(response.body)["message"] != "fail") {
       jsonResponse = json.decode(response.body);
 
-      List rutinas = jsonDecode(response.body)["program_selected"]["routines"];
-
-      //  Routine infoRutin = Routine.fromJson(jsonDecode(response.body)["program_selected"]["routines"]);
-      return rutinas.map((e) => evapro.Routine.fromJson(e)).toList();
+      List ejerc = jsonDecode(response.body);
+      //quiero qu absorva por id de rutina
+      //print(ejerc);
+      // evapro.Exercise infoRutin = evapro.Exercise.fromJson(jsonDecode(response.body)["program_selected"]["routines"]);
+      return ejerc.map((e) => ResEjercicioxTipoModel.fromJson(e)).toList();
+      
+      //  return infoRutin;
     }
   }
 
@@ -150,17 +217,6 @@ class HttpHelper {
         },
         body: jsonEncode(data));
 
-    // if (response.statusCode == 200) {
-    //   print(json.decode(response.body));
-    //   //   if (json.decode(response.body)["message"] != "fail") {
-    //   jsonResponse = json.decode(response.body);
-    //  evapro.Routine infoRutiClie = evapro.Routine.fromJson(
-    //       jsonDecode(response.body)["program_selectec"]["routines"]);
-
-    //   print(infoRutiClie);
-    //   return infoRutiClie;
-    // }
-
     if (response.statusCode == 200) {
       //print("so" + response.body);
       dynamic regisEva = jsonDecode(response.body);
@@ -188,6 +244,26 @@ class HttpHelper {
       return stProfile;
     }
   }
+  Future<ProgramSelected> consultarProgramSele(String idPro, String token) async {
+    var jsonResponse;
+    var response = await http.get(
+      "$urlBase/user/$idPro",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "$token"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      jsonResponse = json.decode(response.body);
+
+      
+    ProgramSelected stProfile = ProgramSelected.fromJson(jsonDecode(response.body)["program_selected"]);
+      //print(stProfile);
+      return stProfile;
+    }
+  }
 
   Future<evapro.Evaluation> consultaEvaluation(
       String idPro, String token) async {
@@ -205,7 +281,7 @@ class HttpHelper {
       jsonResponse = json.decode(response.body);
 
       evapro.Evaluation stProfile =
-          evapro.Evaluation.fromJson(jsonDecode(response.body));
+          evapro.Evaluation.fromJson(jsonDecode(response.body)["evaluation"]);
       //print(stProfile);
       return stProfile;
     }
@@ -238,7 +314,6 @@ class HttpHelper {
       List ejerciciosAll = List<general.EjerciciosAll>();
 
       for (var i = 0; i < jsonResponse.length; i++) {
-
         //instancia del Modelo completo
         general.EjerciciosAll exercisesAll = general.EjerciciosAll();
 
@@ -250,8 +325,10 @@ class HttpHelper {
 
           exercise.id = jsonResponse[i]["exercises"][j]['_id'];
           exercise.name = jsonResponse[i]["exercises"][j]['name'];
-          exercise.series = jsonResponse[i]["exercises"][j]['series'].toString();
-          exercise.iterations = jsonResponse[i]["exercises"][j]['iterations'].toString();
+          exercise.series =
+              jsonResponse[i]["exercises"][j]['series'].toString();
+          exercise.iterations =
+              jsonResponse[i]["exercises"][j]['iterations'].toString();
           exercise.restSerie =
               jsonResponse[i]["exercises"][j]['rest_serie'].toString();
           exercise.restExercise =

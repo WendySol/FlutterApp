@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     recuperarIdUser();
     listPages.add(PrincipalPage(pro));
-    listPages.add(CommunityPage());
+    //listPages.add(CommunityPage());
     listPages.add(ShowRoutinesPage(pro));
     //listPages.add(EvaluationPage(pro));
     listPages.add(ProfilePage(pro));
@@ -49,7 +49,10 @@ class _HomePageState extends State<HomePage> {
   void recuperarIdUser() async {
     idPro = await Preferencias().getIdUser();
     token = await Preferencias().getUserToken();
-    
+
+      print("ide"+idPro);
+    print("token"+token);
+
     Profile profileRecup = await HttpHelper().consultarUsuario(idPro, token);
     print(profileRecup);
     setState(() {
@@ -65,7 +68,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-  //  print(idPro);
+   print(pro);
     return Scaffold(
       // appBar: AppBar(
       //   title: Text("Qenqo App"),
@@ -81,10 +84,10 @@ class _HomePageState extends State<HomePage> {
   Widget _createBottomNavigationBar(_currentIndex) {
     return ClipRRect(
       
-      //  borderRadius: BorderRadius.only(
-      //   topRight: Radius.circular(40),
-      //   topLeft: Radius.circular(40),
-      // ),
+       borderRadius: BorderRadius.only(
+        topRight: Radius.circular(40),
+        topLeft: Radius.circular(40),
+      ),
       child: Container(        
         color: Colors.cyan[900],
         child: BottomNavigationBar(
@@ -100,14 +103,14 @@ class _HomePageState extends State<HomePage> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: "Principal",
+              label: "Inicio",
               backgroundColor: Colors.orange,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.group),
-              label: "Comunidad",
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.group),
+            //   label: "Comunidad",
+            //   backgroundColor: Theme.of(context).primaryColor,
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.fitness_center_sharp),
               label: "Programa",
