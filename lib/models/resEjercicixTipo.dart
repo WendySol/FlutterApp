@@ -16,7 +16,7 @@ class ResEjercicioxTipoModel {
         this.iterations,
         this.restSerie,
         this.restExercise,
-        this.iterationsType,
+        this.iterationsType, 
         this.type,
         this.urlImage,
         this.urlGif,
@@ -24,24 +24,24 @@ class ResEjercicioxTipoModel {
 
     String id;
     String name;
-    int series;
-    int iterations;
-    int restSerie;
-    int restExercise;
-    IterationsType iterationsType;
-    Type type;
+    String series;
+    String iterations;
+    String restSerie;
+    String restExercise;
+    String iterationsType;
+    String type;
     String urlImage;
     String urlGif;
 
     factory ResEjercicioxTipoModel.fromJson(Map<String, dynamic> json) => ResEjercicioxTipoModel(
         id: json["_id"],
         name: json["name"],
-        series: json["series"],
-        iterations: json["iterations"],
-        restSerie: json["rest_serie"],
-        restExercise: json["rest_exercise"],
-        iterationsType: iterationsTypeValues.map[json["iterations_type"]],
-        type: typeValues.map[json["type"]],
+        series: json["series"].toString(),
+        iterations: json["iterations"].toString(),
+        restSerie: json["rest_serie"].toString(),
+        restExercise: json["rest_exercise"].toString(),
+        iterationsType: json["iterations_type"],
+        type: json["type"],
         urlImage: json["url_image"],
         urlGif: json["url_gif"],
     );
@@ -53,8 +53,8 @@ class ResEjercicioxTipoModel {
         "iterations": iterations,
         "rest_serie": restSerie,
         "rest_exercise": restExercise,
-        "iterations_type": iterationsTypeValues.reverse[iterationsType],
-        "type": typeValues.reverse[type],
+        "iterations_type":iterationsType,
+        "type": type,
         "url_image": urlImage,
         "url_gif": urlGif,
     };

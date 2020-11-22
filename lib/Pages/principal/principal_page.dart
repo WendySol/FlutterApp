@@ -113,7 +113,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
         SliverList(
             delegate: SliverChildListDelegate([
           _builCategorias(),
-          _listItem(),
+          _listHorizontal2(),
         ])
 
             //         SliverChildBuilderDelegate((BuildContext context, int index) {
@@ -156,6 +156,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
       ),
     );
   }
+
 
   Widget _builEvaluacion() {
     return FutureBuilder<ProgramSelected>(
@@ -324,172 +325,7 @@ class _PrincipalPageState extends State<PrincipalPage> {
       ],
     );
   }
-
-//--------Todos los ejercicios-----------------
-  Widget _listItem2() {
-    /// list view expandido con todo de largo, los botoncitos e imagenes ejercicios
-    return FutureBuilder(
-        future: helper.obtenerProgramaAll(id, token),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<exeAll.EjerciciosAll>> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              List<exeAll.EjerciciosAll> ejercicios = snapshot.data;
-
-              return ListView.builder(
-                  itemCount: ejercicios.length + 1,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //_itemProgram(),
-                          Padding(
-                            padding: EdgeInsets.only(left: 30),
-                            child: Text(
-                              "Por músculo",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-
-                          // lista horizontal
-                          _builCategorias(),
-
-                          _listHorizontal2(),
-
-                          Padding(
-                            padding: EdgeInsets.only(left: 30),
-                            child: Text(
-                              "Rutinas Físicas",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    int i = index - 1;
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, 'detalleEjercicio',
-                            arguments: ejercicios[i]);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 110,
-                          width: double.infinity,
-                          margin:
-                              EdgeInsets.only(right: 20, left: 20, bottom: 30),
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(image[index % image.length]),
-                                //AssetImage("assets/brazos.jpg"),
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black54, BlendMode.darken),
-                              ),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ejercicios[i].name,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      //color: Theme.of(context).accentColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800),
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  "380 Cal",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                SizedBox(height: 5),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-            } else {
-              return Text("No hay informacion");
-            }
-          }
-          if (snapshot.hasError) {
-            return Text("No hay informacion");
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
-  }
-
-  Widget _listItem() {
-    /// list view expandido con todo de largo, los botoncitos e imagenes ejercicios
-    return FutureBuilder(
-        future: HttpHelper().consultarRutinasxTipo(token, tipo),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<ResEjercicioxTipoModel>> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              List<ResEjercicioxTipoModel> ejerciciosTipo = snapshot.data;
-
-              return ListView.builder(
-                  itemCount: ejerciciosTipo.length + 1,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return _listHorizontal2();
-                    }
-                  });
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          } else if (snapshot.hasError) {
-            return //Center(child: Text(snapshot.error.toString()));
-                Container(
-              width: 550,
-              height: 280,
-              child: Card(
-                  child: Center(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                    Text("Por el momento no contamos con estos ejerciciiios "),
-                    //Text(snapshot.error),
-                    Image(
-                      width: 50,
-                      image: AssetImage("assets/orig.png"),
-                    )
-                  ]))),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-        });
-  }
-
-  Widget _listHorizontal2() {
+ Widget _listHorizontal2() {
     return ScrollConfiguration(
       behavior: ScrollBehavior(),
 
@@ -540,6 +376,16 @@ class _PrincipalPageState extends State<PrincipalPage> {
                                         child: Container(
                                           child: Text(
                                             ejerciciosTipo[index].name,
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ), Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          child: Text(
+                                            ejerciciosTipo[index].type,
                                             style: TextStyle(
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.w600),

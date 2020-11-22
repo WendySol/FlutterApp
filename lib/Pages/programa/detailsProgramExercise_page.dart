@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:page_view_indicators/page_view_indicators.dart';
 import 'package:proyecto_codigo/models/resProfileRecovery_model.dart' as log;
 import 'package:proyecto_codigo/models/resResEvaProgram_model.dart';
 import 'package:proyecto_codigo/utils/httphelper.dart';
 import 'package:proyecto_codigo/utils/preferences_user.dart';
 
 import 'package:flutter_page_indicator/flutter_page_indicator.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DetailsProgramPage extends StatefulWidget {
   DetailsProgramPage();
@@ -19,6 +18,7 @@ class DetailsProgramPage extends StatefulWidget {
 
 class _DetailsProgramPageState extends State<DetailsProgramPage> {
   //final controller = PageController(viewportFraction: 0.8);
+  final _currentPageNotifier = ValueNotifier<int>(0);
 
   log.Profile pro;
   String token;
@@ -47,76 +47,97 @@ class _DetailsProgramPageState extends State<DetailsProgramPage> {
   Widget build(BuildContext context) {
     final Routine routinesProgram = ModalRoute.of(context).settings.arguments;
 
-    final _pageController = PageController(viewportFraction: 0.9, initialPage: 0);
+    final _pageController =
+        PageController(viewportFraction: 0.9, initialPage: 0);
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text("${routinesProgram.name}"),
       ),
-      body: PageView.builder(
-        controller: _pageController,
-          itemCount: routinesProgram.exercises.length,
-          itemBuilder: (context, index) {
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-              padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
-              margin: EdgeInsets.symmetric(vertical: 15),
-                    color: Colors.green,
-                    height: 600,
+      body: Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          _buildCircleIndicator(routinesProgram.exercises),
+          Expanded(
+            child: PageView.builder(
+                controller: _pageController,
+                itemCount: routinesProgram.exercises.length,
+                onPageChanged: (int index) {
+                  _currentPageNotifier.value = index;
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: FadeInImage(
-                            
-                            image:
-                                NetworkImage(routinesProgram.exercises[index].urlGif),
-                            height: screenSize.height * 0.5,
-                            width: screenSize.width * 0.6,
-                            fit: BoxFit.fill,
-                            placeholder: AssetImage("assets/no-image.jpg"),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 15),
+                          margin: EdgeInsets.symmetric(vertical: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.cyan[800],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          height: 600,
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: FadeInImage(
+                                  image: NetworkImage(
+                                      routinesProgram.exercises[index].urlGif),
+                                  height: screenSize.height * 0.5,
+                                  width: screenSize.width * 0.6,
+                                  fit: BoxFit.fill,
+                                  placeholder:
+                                      AssetImage("assets/no-image.jpg"),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Nombre :  '),
+                                  Text(
+                                      '${routinesProgram.exercises[index].name}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('restSerie :  '),
+                                  Text(
+                                      '${routinesProgram.exercises[index].restSerie}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('series :  '),
+                                  Text(
+                                      '${routinesProgram.exercises[index].series}'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('restExercise :  '),
+                                  Text(
+                                      '${routinesProgram.exercises[index].restExercise}'),
+                                ],
+                              ),
+                            ],
                           ),
-                        ), Row(
-                    
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Nombre :  '),
-                      Text('${routinesProgram.exercises[index].name}'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('restSerie :  '),
-                      Text('${routinesProgram.exercises[index].restSerie}'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('series :  '),
-                      Text('${routinesProgram.exercises[index].series}'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('restExercise :  '),
-                      Text('${routinesProgram.exercises[index].restExercise}'),
-                    ],
-                  ),
+                        ),
                       ],
                     ),
-                  ),
-                 
-                ],
-              ),
-            );
-          }),
+                  );
+                }),
+          ),
+        ],
+      ),
 
       /*  Container(
         child: Column(children: [
@@ -184,6 +205,20 @@ class _DetailsProgramPageState extends State<DetailsProgramPage> {
     // );
 
     // }));
+  }
+
+  _buildCircleIndicator(List<Exercise> routina) {
+    return Positioned(
+      left: 0.0,
+      right: 0.0,
+      bottom: 20,
+      child: CirclePageIndicator(
+        selectedDotColor: Colors.black,
+        dotColor: Colors.grey[400],
+        itemCount: routina.length,
+        currentPageNotifier: _currentPageNotifier,
+      ),
+    );
   }
 
   Widget cardSwiper(Routine routinesProgram) {
